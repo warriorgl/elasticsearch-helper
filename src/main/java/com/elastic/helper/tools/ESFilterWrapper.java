@@ -30,23 +30,31 @@ public class ESFilterWrapper implements Serializable {
                     continue;
                 }
                 FilterType filterType = field.getAnnotation(FilterType.class);
+                if (!filterType.exist()){ //忽略字段
+                    continue;
+                }
+                /*获取过滤类型*/
                 FType current = filterType != null ? filterType.value() : FType.STRING;
+                /*处理过滤别名*/
+                String fieldName = field.getName();
+                if (filterType != null && !"".equals(filterType.alias())) {
+                    fieldName = filterType.alias();
+                }
+                /*处理过滤 特殊值*/
                 String ignoreValue = filterType == null ? "" : filterType.ignoreValue();
                 if (ignoreValue.equals(value)) {
                     continue;
                 }
                 if (current == FType.STRING) {
-                    filterList.add(QueryBuilders.termQuery(field.getName(), value));
+                    filterList.add(QueryBuilders.termQuery(fieldName, value));
                 } else if (current == FType.DATE) {
-                    String[] dateRange = value.split("#");
-                    filterList.add(QueryBuilders.rangeQuery(field.getName()).from(dateRange[0]).to(dateRange[1]));
+                    buildDateQuery(filterList, value, filterType, fieldName);
                 } else if (current == FType.ARRAY) {
-                    BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
-                    String[] array = value.split(",");
-                    Arrays.stream(array).forEach(a -> {
-                        filterList.add(boolQueryBuilder.should(QueryBuilders.termQuery(field.getName(), a)));
-                    });
-                    filterList.add(boolQueryBuilder);
+                    buildArrayQuery(filterList, value, filterType, fieldName);
+                } else if (current == FType.EXISTS) {
+                    buildExistsQuery(filterList, value, fieldName);
+                } else if (current == FType.MUST_NOT){
+                    buildMustNotQuery(filterList, value, filterType, fieldName);
                 }
             }
             return filterList;
@@ -54,6 +62,48 @@ public class ESFilterWrapper implements Serializable {
             log.error("filterwrapper exception:{}", i.getLocalizedMessage());
         }
         return Collections.EMPTY_LIST;
+    }
+
+    private void buildMustNotQuery(List<QueryBuilder> filterList, String value, FilterType filterType, String fieldName) {
+        String[] array = value.split(filterType.separator());
+        BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
+        for (String a : array) {
+            boolQueryBuilder.mustNot(QueryBuilders.termQuery(fieldName, a));
+        }
+        filterList.add(boolQueryBuilder);
+    }
+
+
+    private void buildExistsQuery(List<QueryBuilder> filterList, String value, String fieldName) {
+        BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
+        boolean bvalue = Boolean.valueOf(value);
+        if (bvalue) {
+            filterList.add(QueryBuilders.existsQuery(fieldName));
+        } else {
+            boolQueryBuilder.mustNot(QueryBuilders.existsQuery(fieldName));
+            filterList.add(boolQueryBuilder);
+        }
+    }
+
+    private void buildArrayQuery(List<QueryBuilder> filterList, String value, FilterType filterType, String fieldName) {
+        String[] array = value.split(filterType.separator());
+        String finalFieldName = fieldName;
+        BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
+        for (String a : array) {
+            boolQueryBuilder.should(QueryBuilders.termQuery(finalFieldName, a));
+        }
+        filterList.add(boolQueryBuilder);
+    }
+
+    private void buildDateQuery(List<QueryBuilder> filterList, String value, FilterType filterType, String fieldName) {
+        String[] dateRange = value.split(filterType.separator());
+        if (value.startsWith(filterType.separator())) {
+            filterList.add(QueryBuilders.rangeQuery(fieldName).to(dateRange[1]));
+        } else if (value.endsWith(filterType.separator())) {
+            filterList.add(QueryBuilders.rangeQuery(fieldName).from(dateRange[0]));
+        } else {
+            filterList.add(QueryBuilders.rangeQuery(fieldName).from(dateRange[0]).to(dateRange[1]));
+        }
     }
 
 }

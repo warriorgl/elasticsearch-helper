@@ -1,7 +1,5 @@
-package com.elastic.helper;
+package com.elastic.helper.tools;
 
-import com.elastic.helper.tools.ESUpdateWrapper;
-import com.elastic.helper.tools.SearchResult;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.elasticsearch.action.ActionListener;
@@ -30,18 +28,19 @@ import org.elasticsearch.search.aggregations.Aggregations;
 import org.elasticsearch.search.aggregations.bucket.terms.ParsedStringTerms;
 import org.elasticsearch.search.aggregations.bucket.terms.Terms;
 import org.elasticsearch.search.fetch.subphase.highlight.HighlightField;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.util.*;
 
-@Service
 @Slf4j
 public class ElasticSearchHelper {
 
 
-    @Autowired
     private RestHighLevelClient highLevelClient;
+
+
+    public ElasticSearchHelper(RestHighLevelClient highLevelClient) {
+        this.highLevelClient = highLevelClient;
+    }
 
 
     /**

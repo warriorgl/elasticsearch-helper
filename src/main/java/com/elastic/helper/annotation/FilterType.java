@@ -23,4 +23,24 @@ public @interface FilterType {
     String ignoreValue() default "";
 
 
+    /**
+     * 过滤别名 如果一个字段检索条件不一样可使用
+     * @return
+     */
+    String alias() default "";
+
+    /**
+     * 多个数据分隔符，默认逗号
+     * @return
+     */
+    String separator() default ",";
+
+
+    /**
+     * 是否存在此条件 默认true
+     * @return
+     */
+    boolean exist() default true;
+
+
 }

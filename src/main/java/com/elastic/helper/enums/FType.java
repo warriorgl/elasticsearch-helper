@@ -12,6 +12,16 @@ public enum FType {
     /**
      * 多值类型，逗号分隔  格式要求：a,b,c
      */
-    ARRAY
+    ARRAY,
+
+    /**
+     * 查询的字段内容是否为空 true：不为空。 false：为空
+     */
+    EXISTS,
+
+    /**
+     * 内容不查询
+     */
+    MUST_NOT;
 
 }

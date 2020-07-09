@@ -1,6 +1,6 @@
 package com.elastic.helper.demo;
 
-import com.elastic.helper.ElasticSearchHelper;
+import com.elastic.helper.tools.ElasticSearchHelper;
 import com.elastic.helper.tools.ESFilterWrapper;
 import com.elastic.helper.tools.ESUpdateWrapper;
 import com.elastic.helper.tools.SearchResult;
