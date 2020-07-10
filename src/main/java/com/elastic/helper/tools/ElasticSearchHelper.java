@@ -19,6 +19,7 @@ import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.client.core.CountRequest;
 import org.elasticsearch.client.core.CountResponse;
 import org.elasticsearch.common.text.Text;
+import org.elasticsearch.common.xcontent.XContentType;
 import org.elasticsearch.index.reindex.BulkByScrollResponse;
 import org.elasticsearch.index.reindex.ScrollableHitSource;
 import org.elasticsearch.index.reindex.UpdateByQueryRequest;
@@ -258,16 +259,41 @@ public class ElasticSearchHelper {
     }
 
 
-    public void lambdaUpdateDocument(ESUpdateWrapper<?> updateWrapper) throws IOException {
+    public boolean lambdaUpdateDocument(ESLambdaWrapper<?> updateWrapper){
         if (StringUtils.isBlank(updateWrapper.getDocId())) {
-            return;
+            log.warn("id does not exist:{}",updateWrapper.getDocId());
+            return false;
         }
         if (updateWrapper.getFieldMap().isEmpty()) {
-            return;
+            log.warn("content is null");
+            return false;
         }
-        UpdateRequest request = new UpdateRequest(updateWrapper.getIndex(), updateWrapper.getDocId());
-        request.doc(updateWrapper.getFieldMap());
-        highLevelClient.update(request, RequestOptions.DEFAULT);
+        try {
+            UpdateRequest request = new UpdateRequest(updateWrapper.getIndex(), updateWrapper.getDocId());
+            request.doc(updateWrapper.getFieldMap());
+            highLevelClient.update(request, RequestOptions.DEFAULT);
+        }catch (IOException io){
+            log.error("lambdaUpdateDocument Exception:{}",io.getMessage());
+            return false;
+        }
+        return true;
+    }
+
+
+    public boolean lambdaCreateDocument(ESLambdaWrapper<?> indexWrapper){
+        if (indexWrapper.getFieldMap().isEmpty()) {
+            log.warn("content is null");
+            return false;
+        }
+        try {
+            IndexRequest request = new IndexRequest(indexWrapper.getIndex()).id(indexWrapper.getDocId());
+            request.source(indexWrapper.getFieldMap(), XContentType.JSON);
+            highLevelClient.index(request, RequestOptions.DEFAULT);
+        }catch (IOException io){
+            log.error("lambdaCreateDocument Exception:{}",io.getMessage());
+            return false;
+        }
+        return true;
     }
 
 

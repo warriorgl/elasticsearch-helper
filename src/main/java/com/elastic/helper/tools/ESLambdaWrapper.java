@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Slf4j
-public class ESUpdateWrapper<T> implements Serializable {
+public class ESLambdaWrapper<T> implements Serializable {
 
     private Map<String,Object> fieldMap =new HashMap<>();
 
@@ -15,19 +15,19 @@ public class ESUpdateWrapper<T> implements Serializable {
 
     private String index;
 
-    public ESUpdateWrapper<T> add(ESFunction<T, ?> lambda, Object object){
+    public ESLambdaWrapper<T> add(ESFunction<T, ?> lambda, Object object){
         String fieldName=SerializedLambdaUtils.convertToFieldName(lambda);
         fieldMap.put(fieldName,object);
         return this;
     }
 
 
-    public ESUpdateWrapper<T> docId(String id){
+    public ESLambdaWrapper<T> docId(String id){
         this.docId=id;
         return this;
     }
 
-    public ESUpdateWrapper<T> index(String index){
+    public ESLambdaWrapper<T> index(String index){
         this.index=index;
         return this;
     }

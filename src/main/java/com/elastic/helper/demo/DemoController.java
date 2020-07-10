@@ -2,9 +2,12 @@ package com.elastic.helper.demo;
 
 import com.elastic.helper.tools.ElasticSearchHelper;
 import com.elastic.helper.tools.ESFilterWrapper;
-import com.elastic.helper.tools.ESUpdateWrapper;
+import com.elastic.helper.tools.ESLambdaWrapper;
 import com.elastic.helper.tools.SearchResult;
+import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
+import org.elasticsearch.action.DocWriteRequest;
+import org.elasticsearch.action.delete.DeleteRequest;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.common.Strings;
 import org.elasticsearch.common.unit.TimeValue;
@@ -19,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -42,10 +46,12 @@ public class DemoController {
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
         BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
 
+        /*过滤*/
         List<QueryBuilder> filterList = boolQueryBuilder.filter();
         filterList.addAll(new ESFilterWrapper().filter(filterBean));
 
         List<QueryBuilder> boolmustList = boolQueryBuilder.must();
+        /*查询*/
         boolmustList.add(QueryBuilders.matchQuery("title",queryBean.getKeyword()));
         
         searchSourceBuilder.query(boolQueryBuilder);
@@ -55,15 +61,45 @@ public class DemoController {
 
 
     /**
-     * 更新示例
-     * @param updateWrapper
+     * 单条更新示例
      * @throws IOException
      */
-    public void lambdaUpdateDocument(ESUpdateWrapper<?> updateWrapper) throws IOException {
-        if (StringUtils.isBlank(updateWrapper.getIndex())){
-            updateWrapper.index("indexName");
-        }
-        searchHelper.lambdaUpdateDocument(updateWrapper);
+    public void lambdaUpdateDocument(){
+        ESBean bean= new ESBean();
+        bean.setCode("1");
+        bean.setName("2");
+        ESLambdaWrapper<ESBean> lambdaWrapper= new ESLambdaWrapper();
+        lambdaWrapper.docId("1").add(ESBean::getCode,"1").add(ESBean::getName,"2");
+        searchHelper.lambdaUpdateDocument(lambdaWrapper);
+    }
+
+
+    /**
+     * 单条创建示例
+     */
+    public void lambdaCreateDocument(){
+        ESBean bean= new ESBean();
+        bean.setCode("1");
+        bean.setName("2");
+        ESLambdaWrapper<ESBean> lambdaWrapper= new ESLambdaWrapper();
+        lambdaWrapper.docId("1").add(ESBean::getCode,"1").add(ESBean::getName,"2");
+        searchHelper.lambdaCreateDocument(lambdaWrapper);
+    }
+
+
+    /**
+     * 删除
+     * @throws IOException
+     */
+    public void delete() throws IOException {
+        searchHelper.deleteDocument(new DeleteRequest().id("1"));
+    }
+
+    /**
+     * 批量操作
+     */
+    public void bulkDocument(){
+        List<DocWriteRequest<?>> requests = new ArrayList<>();
     }
 
 
@@ -85,6 +121,12 @@ public class DemoController {
     }
 
 
+    @Data
+    public class ESBean {
+        private String name;
+
+        private String code;
+    }
 
 
 }
