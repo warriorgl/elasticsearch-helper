@@ -1,6 +1,6 @@
-package com.elastic.helper;
+package com.github.warriorgl;
 
-import com.elastic.helper.tools.ElasticSearchHelper;
+import com.github.warriorgl.tools.ElasticSearchHelper;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;

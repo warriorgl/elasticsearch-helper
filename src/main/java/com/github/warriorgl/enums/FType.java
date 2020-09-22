@@ -1,4 +1,4 @@
-package com.elastic.helper.enums;
+package com.github.warriorgl.enums;
 
 public enum FType {
     /**

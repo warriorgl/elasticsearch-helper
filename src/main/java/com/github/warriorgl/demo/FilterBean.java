@@ -1,7 +1,7 @@
-package com.elastic.helper.demo;
+package com.github.warriorgl.demo;
 
-import com.elastic.helper.annotation.FilterType;
-import com.elastic.helper.enums.FType;
+import com.github.warriorgl.annotation.FilterType;
+import com.github.warriorgl.enums.FType;
 import lombok.Data;
 
 @Data

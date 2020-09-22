@@ -1,11 +1,10 @@
-package com.elastic.helper.demo;
+package com.github.warriorgl.demo;
 
-import com.elastic.helper.tools.ElasticSearchHelper;
-import com.elastic.helper.tools.ESFilterWrapper;
-import com.elastic.helper.tools.ESLambdaWrapper;
-import com.elastic.helper.tools.SearchResult;
+import com.github.warriorgl.tools.ElasticSearchHelper;
+import com.github.warriorgl.tools.ESFilterWrapper;
+import com.github.warriorgl.tools.ESLambdaWrapper;
+import com.github.warriorgl.tools.SearchResult;
 import lombok.Data;
-import org.apache.commons.lang3.StringUtils;
 import org.elasticsearch.action.DocWriteRequest;
 import org.elasticsearch.action.delete.DeleteRequest;
 import org.elasticsearch.action.search.SearchRequest;
@@ -42,7 +41,7 @@ public class DemoController {
      * @param filterBean
      * @return
      */
-    public SearchResult keyword(QueryBean queryBean,FilterBean filterBean){
+    public SearchResult keyword(QueryBean queryBean, FilterBean filterBean){
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
         BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
 

@@ -1,6 +1,6 @@
-package com.elastic.helper.annotation;
+package com.github.warriorgl.annotation;
 
-import com.elastic.helper.enums.FType;
+import com.github.warriorgl.enums.FType;
 
 import java.lang.annotation.*;
 

@@ -8,9 +8,9 @@
         <version>2.2.1.RELEASE</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>com.elastic.helper</groupId>
-    <artifactId>elastic</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <groupId>com.github.warriorgl</groupId>
+    <artifactId>elastic-helper</artifactId>
+    <version>1.0</version>
     <name>elastic</name>
     <description>elasticsearch java api helper</description>
 

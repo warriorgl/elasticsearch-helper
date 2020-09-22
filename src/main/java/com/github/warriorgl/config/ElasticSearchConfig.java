@@ -1,4 +1,4 @@
-package com.elastic.helper.config;
+package com.github.warriorgl.config;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpHost;

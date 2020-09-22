@@ -1,4 +1,4 @@
-package com.elastic.helper.demo;
+package com.github.warriorgl.demo;
 
 
 import lombok.Data;

@@ -1,7 +1,7 @@
-package com.elastic.helper.tools;
+package com.github.warriorgl.tools;
 
-import com.elastic.helper.annotation.FilterType;
-import com.elastic.helper.enums.FType;
+import com.github.warriorgl.annotation.FilterType;
+import com.github.warriorgl.enums.FType;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.elasticsearch.index.query.BoolQueryBuilder;
@@ -10,7 +10,6 @@ import org.elasticsearch.index.query.QueryBuilders;
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
