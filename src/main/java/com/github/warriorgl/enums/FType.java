@@ -22,6 +22,11 @@ public enum FType {
     /**
      * 内容不查询
      */
-    MUST_NOT;
+    MUST_NOT,
+
+    /**
+     * 模糊检索
+     */
+    MATCHQUERY;
 
 }

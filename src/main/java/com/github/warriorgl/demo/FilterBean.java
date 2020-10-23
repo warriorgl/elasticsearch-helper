@@ -27,5 +27,11 @@ public class FilterBean {
     private String testString;
 
 
+    /**
+     * 匹配过滤
+     */
+    @FilterType(value = FType.MATCHQUERY)
+    private String publisher;
+
 
 }

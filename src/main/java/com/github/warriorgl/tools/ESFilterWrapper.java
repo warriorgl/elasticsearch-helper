@@ -5,6 +5,7 @@ import com.github.warriorgl.enums.FType;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.elasticsearch.index.query.BoolQueryBuilder;
+import org.elasticsearch.index.query.MatchQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import java.io.Serializable;
@@ -54,6 +55,8 @@ public class ESFilterWrapper implements Serializable {
                     buildExistsQuery(filterList, value, fieldName);
                 } else if (current == FType.MUST_NOT){
                     buildMustNotQuery(filterList, value, filterType, fieldName);
+                } else if (current == FType.MATCHQUERY){
+                    buildMatchQuery(filterList, value, fieldName);
                 }
             }
             return filterList;
@@ -62,6 +65,13 @@ public class ESFilterWrapper implements Serializable {
         }
         return Collections.EMPTY_LIST;
     }
+
+
+    private void buildMatchQuery(List<QueryBuilder> filterList, String value, String fieldName){
+        MatchQueryBuilder fieldQuery = QueryBuilders.matchQuery(fieldName, value);
+        filterList.add(fieldQuery);
+    }
+
 
     private void buildMustNotQuery(List<QueryBuilder> filterList, String value, FilterType filterType, String fieldName) {
         String[] array = value.split(filterType.separator());
