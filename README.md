@@ -49,6 +49,7 @@ Elasticsearch-Helper当前版本主要简化了对各种格式数据的过滤操
 | ARRAY  | 值类型，默认逗号分隔  格式要求：a,b,c  可以通过设置 FilterType注解属性separator来改变分隔符 |
 | EXISTS | 查询的字段是否存在 true：不为空。 false：为空  |
 | MUST_NOT| 设置此值后，相当于取反。除去此值的所有数据    |
+| MATCHQUERY| 模糊匹配查询    |
 
     
 
